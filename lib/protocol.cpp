@@ -1,17 +1,11 @@
-#define MAX_SEQ 7					/* should be 2*n-1 */
-#define NR_BUFS ((MAX_SEQ+1)/2)			
-
-
 #include "protocol.h"
-boolean no_nak= true;				/* no nak has been sent yet */
+boolean no_nak= True;				/* no nak has been sent yet */
 seq_nr oldest_frame = MAX_SEQ + 1;
 
 static boolean between(seq_nr a, seq_nr b, seq_nr c) {
-	return ( 
-			(a <= b && b < c) ||
-			(c < a && a <= b) ||
-			(b < c && c < a)
-		);
+    bool check = ((a <= b && b < c) || (c < a && a <= b) || (b < c && c < a));
+    boolean ret = check?True:False;
+	return ret;
 }
 
 static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, packet buffer[]) {
@@ -27,7 +21,7 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
 	s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
 	
 	if (fk == nak)
-		no_nak = false;
+		no_nak = False;
 		
 	to_physical_layer(&s);			/* transmit the frame */
 	
@@ -71,6 +65,7 @@ void enable_network_layer(void){}
 /* forbid the network to cause a network_layer_ready event */
 void disable_network_layer(void){}
 // -------------------------------------------------------------------------------------
+
 void protocol5() {
 	seq_nr ack_expected;			/* lower edge of sender's window */
 	seq_nr next_frame_to_send;		/* upper edge + 1 */
@@ -95,7 +90,7 @@ void protocol5() {
 	nbuffered = 0;					/* no buffers in use */
 	
 	for (i = 0; i < NR_BUFS; i++)
-		arrived[i] = false;
+		arrived[i] = False;
 		
 		
 	while (true) {

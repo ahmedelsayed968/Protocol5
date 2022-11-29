@@ -1,7 +1,14 @@
-#include "protocol.c"
+
 #define MAX_PKT 1024                    /* packet size in bytes */
-typedef enum { false, true } boolean;   /* boolean type */
+
+typedef enum { False, True } boolean;   /* boolean type */
+
 typedef unsigned int seq_nr;            /* sequence or ACK numbers */
+
+#define MAX_SEQ 7					/* should be 2*n-1 */
+
+#define NR_BUFS ((MAX_SEQ+1)/2)
+
 typedef enum {
     frame_arrival,
     cksum_err,
@@ -58,5 +65,6 @@ void disable_network_layer(void);
 
 static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, packet buffer[]);
 static boolean between(seq_nr a, seq_nr b, seq_nr c);
+void protocol5();
 /* macro inc */
 #define inc(k) if (k < MAX_SEQ) k = k + 1; else k = 0
