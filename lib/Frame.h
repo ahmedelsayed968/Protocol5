@@ -10,7 +10,7 @@
 typedef struct {
     unsigned char data[MAX_PKT_SIZE];
 } Packet;
-typedef enum { data, ack, nak } frame_kind;
+typedef enum { data, ack} frame_kind;
 class Frame {
     frame_kind kind;                    /* what kind of frame? */
     int seq;                         /* sequence number */

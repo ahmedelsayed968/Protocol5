@@ -81,15 +81,48 @@ void Protocol::from_network_layer(int destinationId){
 }
 
 /* deliver information from an inbound frame to the network layer */
-void Protocol::to_network_layer(Packet *p){
-    // get the packe
+void Protocol::to_network_layer(Frame *frame){
+    // get the frame
+    // ge the packet inside it
+    // check its type data or ack
+    // if data display it and show the source and destination info
+    // if ack stop the  corresponding frame's timer
+    if(frame->getKind()==data){
+        display_frame(frame);
+    }
+    else if(frame->getKind()==ack){
+        // stop the timer
+        // display
+        timers[frame->getId()]=0;
+        display_frame(frame);
+    }
+
 }
+
 
 /* get an inbound frame from the physical layer */
 void Protocol::from_physical_layer(Frame *r){
     // should take incoming frames
     // send ack to the source
     // move the frame to the Network layer
+
+    // get the top frame to be processed
+    Frame * frontFrame = Physical_buffer.front();
+    Physical_buffer.pop();
+    // prepare ack_frame and send it to the physical layer to send it to the destination
+    Frame* ack_frame;
+    ack_frame->setSourceId(frontFrame->getDestinationId());
+    ack_frame->setDestinationId(frontFrame->getSourceId());
+    ack_frame->setKind(ack);
+    ack_frame->setTime();
+    ack_frame->setInfo();
+    ack_frame->setSeq(frontFrame->getSeq());
+    ack_frame->setId(frontFrame->getId());
+    common_physical_layer.send(ack_frame);
+    // send frame to Network layer
+    to_network_layer(frontFrame);
+
+
 
 }
 
@@ -282,6 +315,26 @@ int Protocol::check_time_out() {
            return i;
    }
    return -1;
+
+}
+
+void Protocol::display_frame(Frame* frame) {
+//    Frame * frame = Network_layer_packets.
+    if(frame==data){
+        cout << "Message Received:" << endl;
+        cout << "Source: " << frame->getSourceId() << endl;
+        cout << "Destination: " << frame->getDestinationId() << endl;
+        cout << "Message: " << frame->getInfo() << endl;
+        cout << "start time: " << frame->getTime() << endl;
+        cout << "Received time: " << frame->getEndTime() << endl;
+    }
+    else{
+        cout << "Ack Received:" << endl;
+        cout << "Source: " << frame->getSourceId() << endl;
+        cout << "Destination: " << frame->getDestinationId() << endl;
+        cout << "start time: " << frame->getTime() << endl;
+        cout << "Received time: " << frame->getEndTime() << endl;
+    }
 
 }
 

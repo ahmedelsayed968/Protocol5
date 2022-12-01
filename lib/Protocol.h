@@ -44,6 +44,11 @@ class Protocol{
     void enable_network_layer(void);
     void disable_network_layer(void);
     void start_timer(Frame &frame);
+    void stop_timer(Frame* frame);
+    void to_physical_layer(Frame *frame);
+    void display_frame(Frame* frame);
+    void to_network_layer(Frame *frame);
+    void from_physical_layer(Frame *r);
 public:
     queue<Frame*> Physical_buffer;
     Protocol(PhysicalLayer& physicalLayer);
@@ -53,18 +58,14 @@ public:
 /* fetch a packet from the network layer for transmission */
 
 /* deliver information from an inbound frame to the network layer */
-    void to_network_layer(Packet *p);
 
 /* get an inbound frame from the physical layer */
-    void from_physical_layer(Frame *r);
 
 /* pass the frame to the physical layer */
-    void to_physical_layer(Frame *frame);
 
 /* start the clock and enable the timeout event */
 
 /* stop the clock and disable the timeout event */
-    void stop_timer(Frame* frame);
 
 /* start an auxiliary timer and enable the ack_timeout event */
     void start_ack_timer(seq_nr k);
