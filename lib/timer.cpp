@@ -11,7 +11,7 @@ using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 
-static long long timer:: get_time() {
+ long long timer:: get_time() {
 
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
